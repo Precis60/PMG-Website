@@ -28,6 +28,17 @@ export function Footer() {
                 {business.email}
               </a>
             </li>
+            <li>
+              <a
+                className="underline-offset-4 hover:underline"
+                href={business.facebook}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Facebook
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </li>
           </ul>
         </div>
         <div>

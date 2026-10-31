@@ -33,6 +33,20 @@ export function ContactPage() {
               </a>
             </dd>
           </div>
+          <div>
+            <dt className="text-sm text-muted-foreground">Facebook</dt>
+            <dd>
+              <a
+                className="underline underline-offset-4"
+                href={business.facebook}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Precision Maintenance & Gardening
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </dd>
+          </div>
         </dl>
         <p className="mt-8">
           <Link className="font-medium text-eucalypt underline underline-offset-4" to="/quote">

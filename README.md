@@ -24,29 +24,28 @@ npm run preview
 
 ### Base path
 
-Asset URLs follow Vite's `base`. Leave it as `/` for a custom domain or a user site (`https://<user>.github.io/`).
+Asset URLs follow Vite's `base`. The Pages workflow sets `VITE_BASE_PATH=/PMG-Website/` so the site works at `https://precis60.github.io/PMG-Website/`.
 
-For a project site (`https://<user>.github.io/<repo>/`):
+Local check of that build:
 
 ```bash
-VITE_BASE_PATH=/<repo>/ npm run build
+VITE_BASE_PATH=/PMG-Website/ npm run build
+VITE_BASE_PATH=/PMG-Website/ npm run preview -- --host 127.0.0.1 --port 4331
 ```
 
-The value must start and end with `/`. Hash routing means you do not need a 404 fallback for client routes.
+Then open `http://127.0.0.1:4331/PMG-Website/`. Routes stay on the hash (`/#/services`). The production build copies `index.html` to `404.html` so GitHub Pages can still load the app for an unknown path.
 
 ## Deploy to GitHub Pages
 
-1. In the repo settings, set Pages to **GitHub Actions**.
-2. Push to `main`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) builds with the right base path and deploys `dist/`.
-3. A repository named `<user>.github.io` is built with base `/`. Any other name is built with `/<repo>/`.
+Push to `main`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) enables Pages, builds with base `/PMG-Website/`, and deploys `dist/`.
 
-Manual upload: build with the base path above and publish the `dist/` folder.
+If the first run cannot turn Pages on, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**.
 
 ### Custom domain
 
 Do not add a `CNAME` until `precisiongardening.com.au` is registered. When it is:
 
-1. Build with `VITE_BASE_PATH=/`.
+1. In the workflow, set `VITE_BASE_PATH` to `/`.
 2. Point the domain at the host.
 3. Open Graph and LocalBusiness URLs in `index.html` already use `https://precisiongardening.com.au/`.
 

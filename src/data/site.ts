@@ -17,6 +17,7 @@ export const business = {
   phoneTel: '+61413729663',
   email: 'jamie@projects-consultant.com',
   owner: 'Jamie Anderson',
+  facebook: 'https://www.facebook.com/profile.php?id=61595705055354',
   locality: 'Yarraville',
   region: 'VIC',
   country: 'AU',
