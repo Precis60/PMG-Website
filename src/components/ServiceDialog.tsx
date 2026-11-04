@@ -62,9 +62,16 @@ export function ServiceDialog({ service }: { service: Service | undefined }) {
                 </p>
               ) : null}
               <p className="text-xs text-muted-foreground">Illustrative image. Not a photo of our work.</p>
-              <Button asChild className="h-11 w-fit px-4">
-                <Link to={`/quote?service=${service.slug}`}>Ask for this in a quote</Link>
-              </Button>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild className="h-11 px-4">
+                  <Link to={`/quote?service=${service.slug}`}>Ask for this in a quote</Link>
+                </Button>
+                {service.slug === 'lawn-care' ? (
+                  <Button asChild variant="outline" className="h-11 bg-background px-4">
+                    <Link to="/quote?service=lawn-care&estimate=1">Estimate your lawn</Link>
+                  </Button>
+                ) : null}
+              </div>
             </div>
           </div>
         </DialogContent>
