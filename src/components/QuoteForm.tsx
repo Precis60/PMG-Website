@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { business, coreSuburbs, extendedSuburbs, serviceBySlug, services } from '@/data/site'
 import { enquiryMailto, submitEnquiry, type Enquiry } from '@/lib/enquiry'
+import { mergeNotes, type NotePatch } from '@/lib/quote-notes'
 
 const fieldClass = 'h-11 bg-background text-base md:text-base'
 
@@ -42,7 +43,15 @@ function validate(values: {
   return errors
 }
 
-export function QuoteForm({ preset }: { preset: string }) {
+export function QuoteForm({
+  preset,
+  patch,
+  blocks,
+}: {
+  preset: string
+  patch: NotePatch | null
+  blocks: { lawn: string; price: string }
+}) {
   const presetService = serviceBySlug(preset)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -57,6 +66,13 @@ export function QuoteForm({ preset }: { preset: string }) {
   const [phase, setPhase] = useState<'edit' | 'sending' | 'stored' | 'email'>('edit')
   const [mailto, setMailto] = useState('')
   const [sentName, setSentName] = useState('')
+  const appliedPatch = useRef(0)
+
+  useEffect(() => {
+    if (!patch || patch.seq === appliedPatch.current) return
+    appliedPatch.current = patch.seq
+    setMessage((current) => mergeNotes(current, patch))
+  }, [patch])
 
   function toggle(slug: string, checked: boolean) {
     setSelected((current) => {
@@ -67,7 +83,9 @@ export function QuoteForm({ preset }: { preset: string }) {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const nextErrors = validate({ name, phone, email, suburb, other, selected, date, message })
+    const fullMessage = mergeNotes(message, { lawn: blocks.lawn, price: blocks.price })
+    if (fullMessage !== message) setMessage(fullMessage)
+    const nextErrors = validate({ name, phone, email, suburb, other, selected, date, message: fullMessage })
     setErrors(nextErrors)
     const first = Object.keys(nextErrors)[0]
     if (first) {
@@ -89,7 +107,7 @@ export function QuoteForm({ preset }: { preset: string }) {
       suburb: suburb === 'Other' ? other.trim() : suburb,
       services: services.filter((service) => selected.includes(service.slug)).map((service) => service.title),
       preferredDate: date || null,
-      message: message.trim(),
+      message: fullMessage.trim(),
     }
 
     setPhase('sending')
@@ -346,10 +364,10 @@ export function QuoteForm({ preset }: { preset: string }) {
             maxLength={1500}
             aria-invalid={errors.message ? true : undefined}
             aria-describedby={errors.message ? 'message-error' : 'message-hint'}
-            className="min-h-32 bg-background text-base md:text-base"
+            className="field-sizing-content min-h-32 scroll-mt-28 bg-background text-base md:text-base"
           />
           <p id="message-hint" className="text-sm text-muted-foreground">
-            Optional. Access notes, what you want done.
+            Optional. Access notes go here. Lawn size and price are added below.
           </p>
           {errors.message ? (
             <p id="message-error" className="text-sm text-destructive">

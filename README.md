@@ -62,6 +62,14 @@ There is no backend yet, so it returns `false`. A later change should insert one
 
 The form includes a honeypot field (`pmg_hp`). If it is filled, the form shows thanks and sends nothing.
 
+## Lawn size and indicative price
+
+On Get a quote, a customer can total a lawn from rectangles, circles and triangles, then build an indicative price. Both are written into the message field. Sending still uses `submitEnquiry` exactly as above.
+
+Change every price and the monthly discount in [`src/config/pricing.ts`](src/config/pricing.ts). Amounts are AUD, ex-GST. The page says they are indicative and confirmed on site. Weed spraying is in that file with `enabled: false` until the owner is licensed.
+
+There is no satellite map. Esri World Imagery is not free for a commercial site. Vicmap Basemaps charges a licence fee to put aerial imagery on a business website. The free Sentinel-2 cloudless layer (EOX, Copernicus data) is about 10 m per pixel, too coarse to trace a lawn. Customers enter measurements instead.
+
 ## Brand
 
 - Eucalypt `#1F4D3A`, Brass `#C9A227`, Sandstone `#F5F3EE`, Charcoal `#23272A`, Sage `#A8BFA3`
